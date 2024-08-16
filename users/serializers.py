@@ -77,6 +77,6 @@ class LoginSerializer(serializers.Serializer):
     
 #프로필
 class ProfileSerializer(serializers.ModelSerializer): #profile에 해당하는 모델만 쓰므로 ModelSerializer
-    class Meta:
+    class Meta: #정보 관리용
         model = Profile
         fields = ('nickname', 'position', 'subjects')
