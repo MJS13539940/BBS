@@ -53,12 +53,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         #토큰 생성
         token = Token.objects.create(user=user) #유저정보를 기반으로 토큰생성
+        print('---------created token: ', token) #생성된거 확인용
 
         return user
     
 
 #로그인
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer): #모델에 한정되어 데이터를 읽고 쓰고하는게 아니라서 ModelSerializer를 안쓴다.
     #인증 시 쓰는건 주로 아이디, 비번.
     username = serializers.CharField(required=True) #필수입력
     password = serializers.CharField(required=True, write_only=True) #쓰기만 가능
@@ -66,7 +67,7 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         user = authenticate(**data) #키워드로 구성된 여러개의 파라미터를 받음
 
-        if user: #토큰 생성
+        if user: #user에 정상적인 데이터가 들어와서 True가 되면 토큰을 발행
             token = Token.objects.get(user=user)
             return token
         
@@ -79,4 +80,4 @@ class LoginSerializer(serializers.Serializer):
 class ProfileSerializer(serializers.ModelSerializer): #profile에 해당하는 모델만 쓰므로 ModelSerializer
     class Meta: #정보 관리용
         model = Profile
-        fields = ('nickname', 'position', 'subjects')
+        fields = ('nickname', 'position', 'subject')

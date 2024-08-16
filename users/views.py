@@ -18,10 +18,12 @@ class RegisterView(generics.CreateAPIView):
     #RegisterSerializer 의 인스턴스 생성
     serializer_class = RegisterSerializer
 
-class LoginView(generics.CreateAPIView):
+class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
+    # permission_classes = [CustomReadOnly]
 
     def post(self, request): #포스트를 통해서 토큰의 정보와 상태를 반환
+        print('---------- LoginView.post()')
         #리퀘스트가 가진 데이터를 들고와서 변수에 할당
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True) #검증 단계
@@ -39,7 +41,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     #그리고 권한을 위한 permissions.py를 생성.
-    permission_class = [CustomReadOnly]
+    permission_classes = [CustomReadOnly]
 
 
 

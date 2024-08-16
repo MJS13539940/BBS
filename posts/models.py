@@ -16,5 +16,13 @@ class Post(models.Model):
     category = models.CharField(max_length=128)
     body = models.TextField() #본문
     image = models.ImageField(upload_to='post/', default='default.png') #저장은 post에, 디폴트값
-    likes = models.ManyToManyField(User, related_name='like_posts', blank=True)
+    likes = models.ManyToManyField(User, related_name='like_posts', blank=True) #서로 다른 related name를 통해 User와 1:1, 다:다 과정에서 생기는 오류를 회피함.
     published_date = models.DateTimeField(default=timezone.now)
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    text = models.TextField()
+
+# 이 뒤에 마이그레이션
